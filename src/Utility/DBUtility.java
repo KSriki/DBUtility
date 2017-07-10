@@ -1,3 +1,5 @@
+package Utility;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -97,7 +99,78 @@ public class DBUtility {
 	
 		return rs;
 	}
+
+	public int insert(String sql){
+		Connection con = null;
+		//Should parse and white list here
+		Statement stmt = null;
+		int rs = -1;
+		//Should parse and white list 
+		try{
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+            //con = DriverManager.getConnection("jdbc:oracle:thin:sys as sysdba/oracle@localhost:1521:orcl");
+            con = DriverManager.getConnection("jdbc:oracle:thin:ora1/ora1@localhost:1521:orcl");
+            stmt = con.createStatement();
+			rs = stmt.executeUpdate(sql);
+         
+		            		
+			
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			
+			con.close();
+			}catch(SQLException e){
+			e.printStackTrace();
+			}
+		}
+		//total number of rows after insertion
+		return rs;
+	}
 	
+	public int getColumnCount(){
+		return this.cCount;
+	}
 	
+	public int getRowCount(){
+		return this.rCount;
+	}
+	
+
+	public int delete(String sql){
+		Connection con = null;
+		//Should parse and white list here
+		Statement stmt = null;
+		int rs = -1;
+		//Should parse and white list 
+		try{
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+            //con = DriverManager.getConnection("jdbc:oracle:thin:sys as sysdba/oracle@localhost:1521:orcl");
+            con = DriverManager.getConnection("jdbc:oracle:thin:ora1/ora1@localhost:1521:orcl");
+            stmt = con.createStatement();
+			rs = stmt.executeUpdate(sql);
+         
+		            		
+			
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			
+			con.close();
+			}catch(SQLException e){
+			e.printStackTrace();
+			}
+		}
+		//total number of rows after deletion
+		return rs;
+	}
 	
 }

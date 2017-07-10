@@ -1,3 +1,4 @@
+package Utility;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,8 +21,8 @@ public class UtilityApp {
 			System.out.println("-------------------------");
 		}
 		
-		System.out.println("Rows affected: " + db.update("update cities set city = 'SpaceMan' where citiesid = '395'") + "");
+		System.out.println("Rows affected: " + db.update("update cities set city = 'Limbo' where citiesid < 395") + "");
 		
-		
+		System.out.println(db.getColumnCount());
 	}
 }
