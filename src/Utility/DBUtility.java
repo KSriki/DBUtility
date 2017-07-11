@@ -1,5 +1,6 @@
 package Utility;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,13 +10,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 public class DBUtility {
 	
-	private int cCount = 0;
-	private int rCount = 0;
-	public ArrayList<HashMap<String, String>> select(String sql){
+	private static int cCount = -1;
+	private static int rCount = -1;
+	public static ArrayList<LinkedHashMap<String, String>> select(String sql) throws IOException{
 		
 		//should probably strip the sql
 		
@@ -24,7 +26,12 @@ public class DBUtility {
 		Statement stmt = null;
 		ResultSet rs = null;
 		//Should parse and white list here
-		ArrayList<HashMap<String, String>> temp = new ArrayList<HashMap<String,String>>();
+		
+		if(!(sql.substring(0,7).toLowerCase().equals("select "))){
+			throw new IOException("Unsafe usage of select(String)");
+		}
+		
+		ArrayList<LinkedHashMap<String, String>> temp = new ArrayList<LinkedHashMap<String,String>>();
 
 		try{
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -37,9 +44,9 @@ public class DBUtility {
 				
 				ResultSetMetaData resultSetMetaData = rs.getMetaData();
 				int numberofColumns = resultSetMetaData.getColumnCount();
-				this.cCount = numberofColumns;
+				cCount = numberofColumns;
 				
-				HashMap<String, String> record = new HashMap<String,String>();
+				LinkedHashMap<String, String> record = new LinkedHashMap<String,String>();
 				
 				for(int i = 1; i <= numberofColumns;i++){
 					record.put(resultSetMetaData.getColumnName(i), rs.getString(i));
@@ -47,7 +54,7 @@ public class DBUtility {
 				ct++;
 				temp.add(record);
 			}
-			this.rCount = ct;
+			rCount = ct;
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}catch (ClassNotFoundException e) {
@@ -68,12 +75,15 @@ public class DBUtility {
 		
 	}
 	
-	public int update(String sql){
+	public static int update(String sql) throws IOException{
 		Connection con = null;
 		//Should parse and white list here
 		Statement stmt = null;
 		int rs = -1;
 		//Should parse and white list 
+		if(!(sql.substring(0,7).toLowerCase().equals("update "))){
+			throw new IOException("Unsafe usage of update(String)");
+		}
 		try{
 			Class.forName("oracle.jdbc.driver.OracleDriver");
             //con = DriverManager.getConnection("jdbc:oracle:thin:sys as sysdba/oracle@localhost:1521:orcl");
@@ -100,11 +110,16 @@ public class DBUtility {
 		return rs;
 	}
 
-	public int insert(String sql){
+	public static int insert(String sql) throws IOException{
 		Connection con = null;
 		//Should parse and white list here
 		Statement stmt = null;
 		int rs = -1;
+		
+		if(!(sql.substring(0,7).toLowerCase().equals("insert "))){
+			throw new IOException("Unsafe usage of insert(String)");
+		}
+		
 		//Should parse and white list 
 		try{
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -132,20 +147,24 @@ public class DBUtility {
 		return rs;
 	}
 	
-	public int getColumnCount(){
-		return this.cCount;
+	public static int getColumnCount(){
+		return cCount;
 	}
 	
-	public int getRowCount(){
-		return this.rCount;
+	public static int getRowCount(){
+		return rCount;
 	}
 	
 
-	public int delete(String sql){
+	public static int delete(String sql) throws IOException{
 		Connection con = null;
 		//Should parse and white list here
 		Statement stmt = null;
 		int rs = -1;
+
+		if(!(sql.substring(0,7).toLowerCase().equals("delete "))){
+			throw new IOException("Unsafe usage of delete(String)");
+		}
 		//Should parse and white list 
 		try{
 			Class.forName("oracle.jdbc.driver.OracleDriver");
